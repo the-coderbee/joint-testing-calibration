@@ -1,0 +1,84 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Data files but keep structure
+data/raw_data/*.csv
+data/demo_data/*.csv
+src/data/raw_data/*.csv
+src/data/demo_data/*.csv
+!data/raw_data/.gitkeep
+!src/data/raw_data/.gitkeep
+!data/demo_data/.gitkeep
+!src/data/demo_data/.gitkeep
+
+# Generated files
+*.png
+sample_text.txt
+uploads/*
+!uploads/.gitkeep
+!uploads/results/
+uploads/results/*
+!uploads/results/.gitkeep
+!uploads/results/images/
+uploads/results/images/*
+!uploads/results/images/.gitkeep
+
+# Image subdirectories - ensure directories are tracked but not contents
+!uploads/results/images/heatmaps/
+uploads/results/images/heatmaps/*
+!uploads/results/images/heatmaps/.gitkeep
+
+!uploads/results/images/feature_importance/
+uploads/results/images/feature_importance/*
+!uploads/results/images/feature_importance/.gitkeep
+
+!uploads/results/images/calibration_curves/
+uploads/results/images/calibration_curves/*
+!uploads/results/images/calibration_curves/.gitkeep
+
+!uploads/results/images/predictions/
+uploads/results/images/predictions/*
+!uploads/results/images/predictions/.gitkeep
+
+# Database
+*.db
+*.sqlite3
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Model files
+*.joblib
+
+# Environment
+.env
+.venv
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+configs

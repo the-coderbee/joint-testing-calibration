@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Prediction Result</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="text-center mb-4">Predicted Value: {{ prediction|round(4) }}</h4>
+                    
+                    {% if input_data %}
+                    <h5>Input Data:</h5>
+                    <pre>{{ input_data }}</pre>
+                    {% endif %}
+                    
+                    {% if plot_url %}
+                    <h5 class="mt-4">Calibration Curve:</h5>
+                    <img src="data:image/png;base64,{{ plot_url }}" alt="Calibration Curve" class="img-fluid">
+                    {% endif %}
+                    
+                    {% if saved_image %}
+                    <div class="alert alert-success mt-4">
+                        <p>Image saved to: {{ saved_image }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">Back to Form</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
