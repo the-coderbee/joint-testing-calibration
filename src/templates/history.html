@@ -3,83 +3,170 @@
 {% block title %}Prediction History{% endblock %}
 
 {% block content %}
-<div data-aos="fade-up" data-aos-duration="1000">
-    <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">Prediction History</h1>
-
-    {% if predictions %}
-        <div class="max-w-6xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="200">
-            <div class="bg-white rounded-xl shadow-card overflow-hidden hover-scale">
-                <div class="gradient-animate px-8 py-6 text-white">
-                    <h5 class="text-2xl font-bold">Calibration Curve</h5>
-                </div>
-                <div class="p-8 text-center">
-                    <img src="data:image/png;base64,{{ plot_url }}" alt="Calibration Curve" class="max-w-full h-auto mx-auto rounded-lg shadow-md">
-                    <p class="text-xl text-gray-600 mt-6">Calibration curve based on all historical predictions</p>
-                </div>
-            </div>
+<!-- History container -->
+<div class="space-y-8">
+    <!-- Header section -->
+    <div class="bg-white rounded-lg shadow-card overflow-hidden">
+        <div class="gradient-primary px-6 py-4">
+            <h1 class="text-2xl font-bold text-white flex items-center">
+                <i class="fas fa-history mr-2"></i>
+                Prediction History
+            </h1>
         </div>
-
-        <div class="max-w-6xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="300">
-            <div class="bg-white rounded-xl shadow-card overflow-hidden p-6">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6">Search Predictions</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <input type="text" id="tableSearch" class="w-full px-5 py-3 text-lg rounded-full border-2 border-primary-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 shadow-sm transition-colors" placeholder="Search history...">
+        
+        <div class="p-6">
+            <p class="text-gray-600 mb-6">View all previous predictions and their results.</p>
+            
+            <!-- Calibration curve section -->
+            {% if plot_url %}
+            <div class="bg-gray-50 p-5 rounded-lg mb-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Current Calibration Curve</h2>
+                <div class="flex justify-center">
+                    <img src="data:image/png;base64,{{ plot_url }}" alt="Calibration Curve" class="max-w-full h-auto rounded-lg shadow-sm">
+                </div>
+                <p class="text-center text-sm text-gray-500 mt-3">This curve shows the distribution of all predictions made with this model</p>
+            </div>
+            {% endif %}
+            
+            <!-- Stats overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-calculator text-blue-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-800">{{ predictions|length }}</div>
+                            <div class="text-sm text-gray-500">Total Predictions</div>
+                        </div>
                     </div>
-                    <div>
-                        <button class="w-full px-5 py-3 text-lg bg-gray-200 hover:bg-gray-300 rounded-full transition-colors shadow-sm font-medium" id="resetFilters">
-                            Reset Filters
-                        </button>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-chart-line text-green-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-800">
+                                {% if predictions %}
+                                {{ (predictions|sum(attribute='prediction') / predictions|length)|round(2) }}
+                                {% else %}
+                                0
+                                {% endif %}
+                            </div>
+                            <div class="text-sm text-gray-500">Average Score</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <div class="bg-purple-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-calendar-alt text-purple-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-800">{{ now.strftime('%Y-%m-%d') }}</div>
+                            <div class="text-sm text-gray-500">Last Updated</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-amber-50 p-4 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <div class="bg-amber-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-file-csv text-amber-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-gray-800">
+                                {{ predictions|selectattr('batch_id', 'defined')|list|length }}
+                            </div>
+                            <div class="text-sm text-gray-500">Batch Uploads</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="max-w-6xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="400">
-            <div class="bg-white rounded-xl shadow-card overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full" id="historyTable">
-                        <thead>
-                            <tr class="gradient-animate text-white">
-                                <th class="px-6 py-4 text-left text-lg font-semibold uppercase tracking-wider">ID</th>
-                                <th class="px-6 py-4 text-left text-lg font-semibold uppercase tracking-wider">Timestamp</th>
-                                <th class="px-6 py-4 text-left text-lg font-semibold uppercase tracking-wider">Prediction</th>
-                                <th class="px-6 py-4 text-left text-lg font-semibold uppercase tracking-wider">Actual Value</th>
-                                <th class="px-6 py-4 text-left text-lg font-semibold uppercase tracking-wider">Sensor ID</th>
-                                <th class="px-6 py-4 text-left text-lg font-semibold uppercase tracking-wider">Equipment ID</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            {% for record in predictions %}
-                            <tr class="hover:bg-gray-50 transition-colors" data-aos="fade-up" data-aos-delay="{{ loop.index * 30 }}" data-aos-anchor-placement="top-bottom">
-                                <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900">{{ record['id'] }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900">{{ record['timestamp'] }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-lg font-medium text-primary-600">{{ record['prediction']|round(4) }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900">{{ record['actual_value']|default('N/A', true) }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900">{{ record['sensor_id']|default('N/A', true) }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-lg text-gray-900">{{ record['equipment_id']|default('N/A', true) }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+    </div>
+    
+    <!-- Predictions table -->
+    <div class="bg-white rounded-lg shadow-card overflow-hidden">
+        <div class="gradient-secondary px-6 py-4 flex justify-between items-center">
+            <h2 class="text-lg font-bold text-white flex items-center">
+                <i class="fas fa-table mr-2"></i>
+                Prediction Records
+            </h2>
+            
+            <div class="flex items-center space-x-2">
+                <div class="relative">
+                    <input type="text" id="historySearch" placeholder="Search..." class="text-sm rounded-lg py-1 px-3 pl-8 text-gray-700 border-0 focus:ring-2 focus:ring-secondary-300 focus:outline-none">
+                    <i class="fas fa-search absolute left-2.5 top-2 text-gray-400 text-sm"></i>
                 </div>
+                
+                <select id="historyFilter" class="text-sm rounded-lg py-1 px-3 text-gray-700 border-0 focus:ring-2 focus:ring-secondary-300 focus:outline-none bg-white">
+                    <option value="all">All Types</option>
+                    <option value="single">Single Predictions</option>
+                    <option value="batch">Batch Predictions</option>
+                </select>
             </div>
         </div>
-    {% else %}
-        <div class="max-w-4xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="200">
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 text-blue-700 p-8 rounded-xl shadow-md">
-                <h4 class="text-2xl font-bold mb-4">No prediction history found</h4>
-                <p class="text-xl mb-6">Make some predictions first to see your history here.</p>
-                <a href="/" class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white text-xl font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 inline-block">
-                    Make Predictions
-                </a>
+        
+        <div class="p-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200 shadow-sm rounded-lg" id="historyTable">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="py-2 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="py-2 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                            <th class="py-2 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor ID</th>
+                            <th class="py-2 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Equipment ID</th>
+                            <th class="py-2 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prediction</th>
+                            <th class="py-2 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actual Value</th>
+                            <th class="py-2 px-4 border-b text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in predictions %}
+                        <tr class="{% if loop.index % 2 == 0 %}bg-gray-50{% endif %} hover:bg-gray-100 transition-colors" data-type="{{ 'batch' if p.batch_id else 'single' }}">
+                            <td class="py-3 px-4 border-b">{{ p.id }}</td>
+                            <td class="py-3 px-4 border-b">{{ p.timestamp }}</td>
+                            <td class="py-3 px-4 border-b">{{ p.sensor_id }}</td>
+                            <td class="py-3 px-4 border-b">{{ p.equipment_id }}</td>
+                            <td class="py-3 px-4 border-b font-medium text-primary-600">{{ p.prediction|round(4) }}</td>
+                            <td class="py-3 px-4 border-b">
+                                {% if p.actual_value is not none %}
+                                <span class="font-medium">{{ p.actual_value|round(4) }}</span>
+                                {% else %}
+                                <span class="text-gray-400">Not available</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-4 border-b">
+                                {% if p.batch_id %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <i class="fas fa-layer-group mr-1"></i> Batch
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <i class="fas fa-user mr-1"></i> Single
+                                </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-4 text-center text-sm text-gray-500" id="tableInfo">
+                Showing all {{ predictions|length }} predictions
             </div>
         </div>
-    {% endif %}
-
-    <div class="flex justify-center mb-12" data-aos="fade-up" data-aos-delay="500">
-        <a href="/" class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white text-xl font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-            Back to Predictor
+    </div>
+    
+    <!-- Action buttons -->
+    <div class="flex justify-center">
+        <a href="{{ url_for('index') }}" class="bg-primary-600 hover:bg-primary-700 text-white text-center font-bold py-3 px-6 rounded-lg shadow transition-colors">
+            <i class="fas fa-plus mr-2"></i> Make New Prediction
         </a>
     </div>
 </div>
@@ -87,43 +174,73 @@
 
 {% block extra_js %}
 <script>
-    // Table search functionality
-    const tableSearch = document.getElementById('tableSearch');
-    const resetFilters = document.getElementById('resetFilters');
+    // Table filtering functionality
+    const searchInput = document.getElementById('historySearch');
+    const filterSelect = document.getElementById('historyFilter');
     const historyTable = document.getElementById('historyTable');
+    const tableInfo = document.getElementById('tableInfo');
     
-    if (historyTable) {
-        const tableRows = historyTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    function filterTable() {
+        if (!historyTable) return;
         
-        function applyFilters() {
-            const searchText = tableSearch.value.toLowerCase();
+        const searchText = searchInput ? searchInput.value.toLowerCase() : '';
+        const filterValue = filterSelect ? filterSelect.value : 'all';
+        const rows = historyTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        let visibleCount = 0;
+        
+        for (let row of rows) {
+            // Type filter
+            const rowType = row.getAttribute('data-type');
+            const typeMatch = filterValue === 'all' || filterValue === rowType;
             
-            for (let row of tableRows) {
-                let matchesSearch = false;
-                
-                // Search filter
-                for (let cell of row.getElementsByTagName('td')) {
+            // Text search
+            let textMatch = !searchText;
+            if (searchText) {
+                const cells = row.getElementsByTagName('td');
+                for (let cell of cells) {
                     if (cell.textContent.toLowerCase().includes(searchText)) {
-                        matchesSearch = true;
+                        textMatch = true;
                         break;
                     }
                 }
-                
-                // Show/hide row based on filters
-                row.style.display = matchesSearch ? '' : 'none';
+            }
+            
+            if (typeMatch && textMatch) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
             }
         }
         
-        if (tableSearch) {
-            tableSearch.addEventListener('input', applyFilters);
-        }
-        
-        if (resetFilters) {
-            resetFilters.addEventListener('click', function() {
-                if (tableSearch) tableSearch.value = '';
-                applyFilters();
-            });
+        // Update table info
+        if (tableInfo) {
+            const totalRows = rows.length;
+            if (visibleCount < totalRows) {
+                tableInfo.textContent = `Showing ${visibleCount} of ${totalRows} predictions`;
+            } else {
+                tableInfo.textContent = `Showing all ${totalRows} predictions`;
+            }
         }
     }
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', filterTable);
+    }
+    
+    if (filterSelect) {
+        filterSelect.addEventListener('change', filterTable);
+    }
 </script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .gradient-primary {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0c4a6e 100%);
+    }
+    .gradient-secondary {
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+    }
+</style>
 {% endblock %} 

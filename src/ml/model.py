@@ -1,9 +1,11 @@
 """Model utilities for ML pipeline."""
+from typing import Any
 import pandas as pd
 import numpy as np
 import joblib
 import os
-
+import logging
+from configs.logging_config import get_inference_logger
 
 # Set up model path using absolute path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,19 +14,20 @@ MODEL_PATH = os.path.join(project_root, 'calibration_pipeline.joblib')
 model = None
 
 
-def load_model():
+def load_model()->Any:
     """Load the trained model."""
     global model
+    logger = logging.getLogger(__name__)
     try:
         model = joblib.load(MODEL_PATH)
-        print(f"Model loaded successfully from {MODEL_PATH}")
+        logger.debug(f"Model loaded successfully from {MODEL_PATH}")
         return model
     except Exception as e:
-        print(f"Error loading model from {MODEL_PATH}: {e}")
-        raise
+        logger.error(f"Error loading model: {str(e)}", exc_info=True)
+        return None
 
 
-def get_model():
+def get_model()->Any:
     """Get the trained model, loading it if needed."""
     global model
     if model is None:

@@ -26,14 +26,20 @@ def preprocess_form_data(form):
             
             # Map form fields to expected model column names
             field_mapping = {
+                # Core sensor data
                 'sensor_id': 'Sensor_ID',
                 'equipment_id': 'Equipment_ID',
-                'temperature': 'temperature',  # Changed to lowercase to match expected column
+                'temperature': 'temperature',
+                'Temperature': 'Temperature',  # Capitalized temperature field
                 'voltage': 'voltage',
                 'current': 'current',
                 'power': 'Power (W)',
                 'humidity': 'humidity',
                 'vibration': 'vibration',
+                'sensor_reading': 'sensor_reading',
+                'true_strength': 'true_strength',
+                
+                # Status fields
                 'operational_status': 'Operational Status',
                 'fault_status': 'Fault Status',
                 'failure_type': 'Failure Type',
@@ -43,17 +49,25 @@ def preprocess_form_data(form):
                 'maintenance_costs': 'Maintenance Costs (USD)',
                 'ambient_temperature': 'Ambient Temperature (°C)',
                 'ambient_humidity': 'Ambient Humidity (%)',
+                
+                # Coordinates
                 'x_coord': 'X',
                 'y_coord': 'Y',
                 'z_coord': 'Z',
+                
+                # Equipment info
                 'equipment_criticality': 'Equipment Criticality',
                 'fault_detected': 'Fault Detected',
                 'predictive_maintenance_trigger': 'Predictive Maintenance Trigger',
+                
+                # Time features
                 'hour': 'hour',
                 'dayofweek': 'dayofweek',
                 'month': 'month',
                 'day': 'day',
                 'is_weekend': 'is_weekend',
+                
+                # Environmental sensors
                 'footfall': 'footfall',
                 'temp_mode': 'tempMode',
                 'aq': 'AQ',
@@ -61,7 +75,10 @@ def preprocess_form_data(form):
                 'cs': 'CS',
                 'voc': 'VOC',
                 'rp': 'RP',
-                'ip': 'IP'
+                'ip': 'IP',
+                
+                # Derived features
+                'heat_index': 'heat_index'
             }
             
             # Use the mapping or the original field name
@@ -79,13 +96,17 @@ def preprocess_form_data(form):
     for key, value in data.items():
         print(f"  {key}: {value}")
     
-    # Add default values for any missing required columns
-    required_columns = ['month', 'Operational Status', 'Fault Detected', 'Maintenance Costs (USD)', 
-                       'Predictive Maintenance Trigger', 'X', 'Fault Status', 'Ambient Humidity (%)', 
-                       'hour', 'dayofweek', 'Repair Time (hrs)', 'Maintenance Type', 'day', 
-                       'sensor_reading', 'Equipment_ID', 'Y', 'Power (W)', 'Failure History', 
-                       'Sensor_ID', 'Ambient Temperature (°C)', 'Failure Type', 
-                       'Equipment Criticality', 'Z', 'temperature', 'true_strength']
+    # Complete list of features the model expects (from model.feature_names_in_)
+    required_columns = [
+        'footfall', 'tempMode', 'AQ', 'USS', 'CS', 'VOC', 'RP', 'IP', 'Temperature',
+        'sensor_reading', 'true_strength', 'Sensor_ID', 'Timestamp', 'voltage',
+        'current', 'temperature', 'Power (W)', 'humidity', 'vibration', 'Equipment_ID',
+        'Operational Status', 'Fault Status', 'Failure Type', 'Maintenance Type',
+        'Failure History', 'Repair Time (hrs)', 'Maintenance Costs (USD)',
+        'Ambient Temperature (°C)', 'Ambient Humidity (%)', 'X', 'Y', 'Z',
+        'Equipment Criticality', 'Fault Detected', 'Predictive Maintenance Trigger',
+        'hour', 'dayofweek', 'month', 'day', 'is_weekend', 'heat_index'
+    ]
     
     for col in required_columns:
         if col not in data:
@@ -93,6 +114,10 @@ def preprocess_form_data(form):
             if col == 'true_strength':
                 data[col] = [None]  # Use None for target variable
                 print(f"Added required column '{col}' with None value (target variable)")
+            elif col == 'Timestamp' and 'timestamp' in form and form.timestamp.data:
+                # Use the timestamp from the form if available
+                data[col] = [form.timestamp.data.isoformat()]
+                print(f"Added Timestamp column using form timestamp: {data[col][0]}")
             else:
                 data[col] = [0]  # Use 0 as a default value for features
                 print(f"Added required column '{col}' with default value 0")
@@ -100,9 +125,13 @@ def preprocess_form_data(form):
 
     df = pd.DataFrame(data)
     
+    # Ensure both 'temperature' and 'Temperature' columns exist
     if 'temperature' in df.columns and 'Temperature' not in df.columns:
         df['Temperature'] = df['temperature']
         print("Added Temperature column (copy of temperature)")
+    elif 'Temperature' in df.columns and 'temperature' not in df.columns:
+        df['temperature'] = df['Temperature']
+        print("Added temperature column (copy of Temperature)")
     
     print(f"Final dataframe shape: {df.shape}")
     print(f"Final columns: {sorted(df.columns.tolist())}")

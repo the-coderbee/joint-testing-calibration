@@ -1,76 +1,152 @@
 {% extends "base.html" %}
 
-{% block title %}Prediction Result{% endblock %}
+{% block title %}Prediction Results{% endblock %}
 
 {% block content %}
-<div data-aos="fade-up" data-aos-duration="1000">
-    <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">Prediction Results</h1>
-    
-    <div class="max-w-5xl mx-auto mb-12">
-        <div class="bg-white rounded-xl shadow-card overflow-hidden hover-scale">
-            <div class="gradient-animate px-8 py-6 text-white">
-                <h3 class="text-2xl font-bold">Calibration Result</h3>
-            </div>
-            <div class="p-8 text-center">
-                <div class="text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-secondary-500 my-8 animate-pulse-slow">
-                    {{ prediction|round(4) }}
-                </div>
-                <p class="text-xl text-gray-600 mb-8">Predicted value based on the provided inputs</p>
-                
-                {% if input_data %}
-                <div class="mt-10 border-t pt-8">
-                    <h5 class="text-2xl font-semibold text-gray-700 mb-6">Key Input Parameters</h5>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        {% for key, value in input_data.items() %}
-                            {% if key not in ['submit', 'csrf_token'] and value[0] is not none and value[0]|string != '' %}
-                            <div data-aos="zoom-in" data-aos-delay="{{ loop.index * 50 }}">
-                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                                    <span class="font-medium text-primary-600 block mb-1">{{ key }}</span>
-                                    <span class="text-lg">{{ value[0] }}</span>
-                                </div>
-                            </div>
+<!-- Result container -->
+<div class="space-y-8">
+    <!-- Header section -->
+    <div class="bg-white rounded-lg shadow-card overflow-hidden">
+        <div class="gradient-primary px-6 py-4">
+            <h1 class="text-2xl font-bold text-white flex items-center">
+                <i class="fas fa-chart-line mr-2"></i>
+                Prediction Result
+            </h1>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Main prediction result -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-3">Prediction Value</h2>
+                    <div class="flex items-center">
+                        <div class="text-5xl font-bold text-primary-600">{{ prediction|round(4) }}</div>
+                        <div class="ml-4">
+                            {% if prediction > 0.8 %}
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Excellent</span>
+                            {% elif prediction > 0.6 %}
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Good</span>
+                            {% elif prediction > 0.4 %}
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">Fair</span>
+                            {% else %}
+                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">Poor</span>
                             {% endif %}
-                        {% endfor %}
+                        </div>
+                    </div>
+                    <p class="text-gray-500 mt-2">Predicted calibration score based on input parameters</p>
+                </div>
+                
+                <!-- Timestamp and metadata -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h2 class="text-xl font-semibold text-gray-700 mb-3">Prediction Details</h2>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Timestamp:</span>
+                            <span class="font-medium text-gray-800">{{ now.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                        </div>
+                        {% if input_data.get('Sensor_ID') or input_data.get('sensor_id') %}
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Sensor ID:</span>
+                            <span class="font-medium text-gray-800">{{ input_data.get('Sensor_ID', input_data.get('sensor_id'))[0] }}</span>
+                        </div>
+                        {% endif %}
+                        {% if input_data.get('Equipment_ID') or input_data.get('equipment_id') %}
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Equipment ID:</span>
+                            <span class="font-medium text-gray-800">{{ input_data.get('Equipment_ID', input_data.get('equipment_id'))[0] }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Model Version:</span>
+                            <span class="font-medium text-gray-800">Calibration Pipeline v1.0</span>
+                        </div>
                     </div>
                 </div>
-                {% endif %}
             </div>
         </div>
     </div>
     
+    <!-- Calibration curve section -->
     {% if plot_url %}
-    <div data-aos="fade-up" data-aos-delay="200" class="max-w-5xl mx-auto mb-12">
-        <div class="bg-white rounded-xl shadow-card overflow-hidden hover-scale">
-            <div class="gradient-animate px-8 py-6 text-white">
-                <h3 class="text-2xl font-bold">Calibration Curve</h3>
-            </div>
-            <div class="p-8">
-                <div class="flex justify-center mb-6">
-                    <img src="data:image/png;base64,{{ plot_url }}" alt="Calibration Curve" class="max-w-full h-auto rounded-lg shadow-md">
+    <div class="bg-white rounded-lg shadow-card overflow-hidden">
+        <div class="gradient-primary px-6 py-4">
+            <h2 class="text-2xl font-bold text-white flex items-center">
+                <i class="fas fa-chart-area mr-2"></i>
+                Calibration Curve
+            </h2>
+        </div>
+        
+        <div class="p-6">
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <div class="flex justify-center">
+                    <img src="data:image/png;base64,{{ plot_url }}" alt="Calibration Curve" class="max-w-full h-auto rounded-lg shadow-sm">
                 </div>
-                <p class="text-lg text-gray-600 text-center">The green dot shows your current prediction on the calibration curve</p>
+            </div>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            The green dot shows your current prediction on the calibration curve. The curve shows the distribution of all predictions made with this model.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            {% if saved_image %}
+            <div class="mt-4 text-sm text-gray-500">
+                <p>Image saved to: <code class="bg-gray-100 px-2 py-1 rounded text-sm">{{ saved_image }}</code></p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Input parameters section -->
+    <div class="bg-white rounded-lg shadow-card overflow-hidden">
+        <div class="gradient-secondary px-6 py-4">
+            <h2 class="text-2xl font-bold text-white flex items-center">
+                <i class="fas fa-sliders-h mr-2"></i>
+                Input Parameters
+            </h2>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {% for key, value in input_data.items() %}
+                    {% if key not in ['csrf_token', 'submit', 'true_strength'] and value[0] is not none and value[0]|string != '' %}
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="text-sm text-gray-500">{{ key }}</div>
+                        <div class="text-lg font-medium text-gray-800">{{ value[0] }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
-    {% endif %}
     
-    {% if saved_image %}
-    <div data-aos="fade-up" data-aos-delay="300" class="max-w-5xl mx-auto mb-12">
-        <div class="bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-500 text-green-700 p-6 rounded-xl shadow-md">
-            <p class="text-xl font-semibold mb-2">Visualization saved</p>
-            <p>The calibration curve has been saved to <code class="bg-green-100 px-2 py-1 rounded-md text-lg">{{ saved_image }}</code></p>
-            <p class="text-green-600 mt-4">All result visualizations are stored in the uploads/results/images directory for future reference.</p>
-        </div>
-    </div>
-    {% endif %}
-    
-    <div data-aos="fade-up" data-aos-delay="400" class="flex justify-center space-x-6 mt-10 mb-8">
-        <a href="/" class="bg-gradient-to-r from-primary-500 to-primary-700 hover:from-primary-600 hover:to-primary-800 text-white text-xl font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-            Make Another Prediction
+    <!-- Action buttons -->
+    <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
+        <a href="{{ url_for('index') }}" class="bg-gray-500 hover:bg-gray-600 text-white text-center font-bold py-3 px-6 rounded-lg shadow transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i> Return to Form
         </a>
-        <a href="{{ url_for('history') }}" class="bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white text-xl font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
-            View History
+        <a href="{{ url_for('history') }}" class="bg-primary-600 hover:bg-primary-700 text-white text-center font-bold py-3 px-6 rounded-lg shadow transition-colors">
+            <i class="fas fa-history mr-2"></i> View Prediction History
         </a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .gradient-primary {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0c4a6e 100%);
+    }
+    .gradient-secondary {
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+    }
+</style>
 {% endblock %} 
