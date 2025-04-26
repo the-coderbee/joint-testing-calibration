@@ -24,20 +24,12 @@ def preprocess_form_data(form):
             # Map field names to model expected column names
             model_field_name = field_name
             
-            # Map form fields to expected model column names
+            # Map form fields to expected model column names - most fields now match the model names directly
             field_mapping = {
-                # Core sensor data
-                'sensor_id': 'Sensor_ID',
-                'equipment_id': 'Equipment_ID',
-                'temperature': 'temperature',
-                'Temperature': 'Temperature',  # Capitalized temperature field
-                'voltage': 'voltage',
-                'current': 'current',
-                'power': 'Power (W)',
-                'humidity': 'humidity',
-                'vibration': 'vibration',
-                'sensor_reading': 'sensor_reading',
-                'true_strength': 'true_strength',
+                # Core sensor data - fields now use model column names directly
+                'x_coord': 'X',
+                'y_coord': 'Y',
+                'z_coord': 'Z',
                 
                 # Status fields
                 'operational_status': 'Operational Status',
@@ -50,35 +42,10 @@ def preprocess_form_data(form):
                 'ambient_temperature': 'Ambient Temperature (°C)',
                 'ambient_humidity': 'Ambient Humidity (%)',
                 
-                # Coordinates
-                'x_coord': 'X',
-                'y_coord': 'Y',
-                'z_coord': 'Z',
-                
                 # Equipment info
                 'equipment_criticality': 'Equipment Criticality',
                 'fault_detected': 'Fault Detected',
                 'predictive_maintenance_trigger': 'Predictive Maintenance Trigger',
-                
-                # Time features
-                'hour': 'hour',
-                'dayofweek': 'dayofweek',
-                'month': 'month',
-                'day': 'day',
-                'is_weekend': 'is_weekend',
-                
-                # Environmental sensors
-                'footfall': 'footfall',
-                'temp_mode': 'tempMode',
-                'aq': 'AQ',
-                'uss': 'USS',
-                'cs': 'CS',
-                'voc': 'VOC',
-                'rp': 'RP',
-                'ip': 'IP',
-                
-                # Derived features
-                'heat_index': 'heat_index'
             }
             
             # Use the mapping or the original field name
