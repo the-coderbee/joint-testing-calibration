@@ -1,0 +1,70 @@
+2025-04-26 18:57:20,109 - INFO - batch_prediction_20250426_185720 - Starting Batch Prediction
+2025-04-26 18:57:20,109 - INFO - batch_prediction_20250426_185720 - Starting Batch Prediction
+2025-04-26 18:57:20,110 - INFO - batch_prediction_20250426_185720 - Processing row 1/5
+2025-04-26 18:57:20,110 - INFO - batch_prediction_20250426_185720 - Processing row 1/5
+2025-04-26 18:57:20,496 - INFO - batch_prediction_20250426_185720 - Processing row 2/5
+2025-04-26 18:57:20,496 - INFO - batch_prediction_20250426_185720 - Processing row 2/5
+2025-04-26 18:57:20,516 - INFO - batch_prediction_20250426_185720 - Processing row 3/5
+2025-04-26 18:57:20,516 - INFO - batch_prediction_20250426_185720 - Processing row 3/5
+2025-04-26 18:57:20,537 - INFO - batch_prediction_20250426_185720 - Processing row 4/5
+2025-04-26 18:57:20,537 - INFO - batch_prediction_20250426_185720 - Processing row 4/5
+2025-04-26 18:57:20,556 - INFO - batch_prediction_20250426_185720 - Processing row 5/5
+2025-04-26 18:57:20,556 - INFO - batch_prediction_20250426_185720 - Processing row 5/5
+2025-04-26 18:57:20,575 - INFO - batch_prediction_20250426_185720 - Batch Prediction completed in 0.47s
+2025-04-26 18:57:20,575 - INFO - batch_prediction_20250426_185720 - Batch Prediction completed in 0.47s
+2025-04-26 19:23:00,492 - INFO - batch_prediction_batch_20250426192300 - Starting Batch Prediction
+2025-04-26 19:23:00,492 - INFO - batch_prediction_batch_20250426192300 - Starting Batch Prediction
+2025-04-26 19:23:00,493 - INFO - batch_prediction_batch_20250426192300 - Processing row 1/5
+2025-04-26 19:23:00,493 - INFO - batch_prediction_batch_20250426192300 - Processing row 1/5
+2025-04-26 19:23:00,883 - INFO - batch_prediction_batch_20250426192300 - Processing row 2/5
+2025-04-26 19:23:00,883 - INFO - batch_prediction_batch_20250426192300 - Processing row 2/5
+2025-04-26 19:23:00,901 - INFO - batch_prediction_batch_20250426192300 - Processing row 3/5
+2025-04-26 19:23:00,901 - INFO - batch_prediction_batch_20250426192300 - Processing row 3/5
+2025-04-26 19:23:00,921 - INFO - batch_prediction_batch_20250426192300 - Processing row 4/5
+2025-04-26 19:23:00,921 - INFO - batch_prediction_batch_20250426192300 - Processing row 4/5
+2025-04-26 19:23:00,939 - INFO - batch_prediction_batch_20250426192300 - Processing row 5/5
+2025-04-26 19:23:00,939 - INFO - batch_prediction_batch_20250426192300 - Processing row 5/5
+2025-04-26 19:23:00,955 - INFO - batch_prediction_batch_20250426192300 - Batch Prediction completed in 0.46s
+2025-04-26 19:23:00,955 - INFO - batch_prediction_batch_20250426192300 - Batch Prediction completed in 0.46s
+2025-04-26 19:23:35,254 - INFO - batch_prediction_20250426_192335 - Starting Batch Prediction
+2025-04-26 19:23:35,254 - INFO - batch_prediction_20250426_192335 - Starting Batch Prediction
+2025-04-26 19:23:35,255 - INFO - batch_prediction_20250426_192335 - Processing row 1/5
+2025-04-26 19:23:35,255 - INFO - batch_prediction_20250426_192335 - Processing row 1/5
+2025-04-26 19:23:35,674 - INFO - batch_prediction_20250426_192335 - Processing row 2/5
+2025-04-26 19:23:35,674 - INFO - batch_prediction_20250426_192335 - Processing row 2/5
+2025-04-26 19:23:35,694 - INFO - batch_prediction_20250426_192335 - Processing row 3/5
+2025-04-26 19:23:35,694 - INFO - batch_prediction_20250426_192335 - Processing row 3/5
+2025-04-26 19:23:35,715 - INFO - batch_prediction_20250426_192335 - Processing row 4/5
+2025-04-26 19:23:35,715 - INFO - batch_prediction_20250426_192335 - Processing row 4/5
+2025-04-26 19:23:35,745 - INFO - batch_prediction_20250426_192335 - Processing row 5/5
+2025-04-26 19:23:35,745 - INFO - batch_prediction_20250426_192335 - Processing row 5/5
+2025-04-26 19:23:35,772 - INFO - batch_prediction_20250426_192335 - Batch Prediction completed in 0.52s
+2025-04-26 19:23:35,772 - INFO - batch_prediction_20250426_192335 - Batch Prediction completed in 0.52s
+2025-04-28 10:57:14,968 - INFO - batch_prediction_20250428_105714 - Starting Batch Prediction
+2025-04-28 10:57:14,968 - INFO - batch_prediction_20250428_105714 - Starting Batch Prediction
+2025-04-28 10:57:14,969 - INFO - batch_prediction_20250428_105714 - Processing row 1/5
+2025-04-28 10:57:14,969 - INFO - batch_prediction_20250428_105714 - Processing row 1/5
+2025-04-28 10:57:15,789 - INFO - batch_prediction_20250428_105714 - Processing row 2/5
+2025-04-28 10:57:15,789 - INFO - batch_prediction_20250428_105714 - Processing row 2/5
+2025-04-28 10:57:15,807 - INFO - batch_prediction_20250428_105714 - Processing row 3/5
+2025-04-28 10:57:15,807 - INFO - batch_prediction_20250428_105714 - Processing row 3/5
+2025-04-28 10:57:15,827 - INFO - batch_prediction_20250428_105714 - Processing row 4/5
+2025-04-28 10:57:15,827 - INFO - batch_prediction_20250428_105714 - Processing row 4/5
+2025-04-28 10:57:15,846 - INFO - batch_prediction_20250428_105714 - Processing row 5/5
+2025-04-28 10:57:15,846 - INFO - batch_prediction_20250428_105714 - Processing row 5/5
+2025-04-28 10:57:15,864 - INFO - batch_prediction_20250428_105714 - Batch Prediction completed in 0.90s
+2025-04-28 10:57:15,864 - INFO - batch_prediction_20250428_105714 - Batch Prediction completed in 0.90s
+2025-04-28 11:36:46,628 - INFO - batch_prediction_20250428_113646 - Starting Batch Prediction
+2025-04-28 11:36:46,628 - INFO - batch_prediction_20250428_113646 - Starting Batch Prediction
+2025-04-28 11:36:46,630 - INFO - batch_prediction_20250428_113646 - Processing row 1/5
+2025-04-28 11:36:46,630 - INFO - batch_prediction_20250428_113646 - Processing row 1/5
+2025-04-28 11:36:47,047 - INFO - batch_prediction_20250428_113646 - Processing row 2/5
+2025-04-28 11:36:47,047 - INFO - batch_prediction_20250428_113646 - Processing row 2/5
+2025-04-28 11:36:47,070 - INFO - batch_prediction_20250428_113646 - Processing row 3/5
+2025-04-28 11:36:47,070 - INFO - batch_prediction_20250428_113646 - Processing row 3/5
+2025-04-28 11:36:47,092 - INFO - batch_prediction_20250428_113646 - Processing row 4/5
+2025-04-28 11:36:47,092 - INFO - batch_prediction_20250428_113646 - Processing row 4/5
+2025-04-28 11:36:47,115 - INFO - batch_prediction_20250428_113646 - Processing row 5/5
+2025-04-28 11:36:47,115 - INFO - batch_prediction_20250428_113646 - Processing row 5/5
+2025-04-28 11:36:47,135 - INFO - batch_prediction_20250428_113646 - Batch Prediction completed in 0.51s
+2025-04-28 11:36:47,135 - INFO - batch_prediction_20250428_113646 - Batch Prediction completed in 0.51s

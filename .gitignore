@@ -80,5 +80,3 @@ ENV/
 .vscode/
 *.swp
 *.swo
-
-configs

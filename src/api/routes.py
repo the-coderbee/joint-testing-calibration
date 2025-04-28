@@ -36,6 +36,25 @@ def register_routes(app):
         manual_form = ManualDataForm()
         upload_form = FileUploadForm()
         
+        # Get recent predictions for display
+        recent_predictions = get_past_predictions(5)
+        logger.debug(f"Fetched {len(recent_predictions)} recent predictions")
+        
+        # Calculate statistics for quick stats
+        all_predictions = get_past_predictions(100)
+        stats = {}
+        if all_predictions:
+            prediction_values = [p['prediction'] for p in all_predictions]
+            # Count batch predictions (where sensor_id starts with 'batch')
+            batch_count = len([p for p in all_predictions if p['sensor_id'] and 'batch' in str(p['sensor_id']).lower()])
+            stats = {
+                'total': len(all_predictions),
+                'average': sum(prediction_values) / len(prediction_values) if prediction_values else 0,
+                'batch_count': batch_count
+            }
+        else:
+            stats = {'total': 0, 'average': 0, 'batch_count': 0}
+        
         if request.method == 'POST':
             # Use logger instead of print
             logger.debug("POST request received")
@@ -272,7 +291,13 @@ def register_routes(app):
         
         # Default GET request - render the forms
         logger.debug("Rendering index template with forms")
-        return render_template('index.html', manual_form=manual_form, upload_form=upload_form, now=datetime.now())
+        
+        return render_template('index.html', 
+                              manual_form=manual_form, 
+                              upload_form=upload_form, 
+                              recent_predictions=recent_predictions,
+                              stats=stats,
+                              now=datetime.now())
     
     
     @app.route('/download/<filename>')
@@ -293,25 +318,27 @@ def register_routes(app):
     
     @app.route('/history')
     def history():
-        logger.info("History page accessed")
+        logger.info("History route accessed")
         
-        logger.debug("Retrieving past predictions")
+        # Get past predictions
         predictions = get_past_predictions(100)
         
-        # Extract prediction values for the calibration curve
-        prediction_values = [row['prediction'] for row in predictions]
-        actual_values = [row['actual_value'] for row in predictions]
+        # Extract prediction and actual values for calibration curve
+        prediction_values = [p['prediction'] for p in predictions]
+        actual_values = [p['actual_value'] for p in predictions]
         
-        # Generate calibration curve
+        # Generate calibration curve if we have data
         plot_url = None
         if prediction_values:
-            logger.info(f"Generating calibration curve with {len(prediction_values)} data points")
+            logger.info("Generating calibration curve for history page")
             plot_url = plot_calibration_curve(prediction_values, actual_values)
-        else:
-            logger.warning("No prediction data available for calibration curve")
         
-        logger.debug("Rendering history template")
-        return render_template('history.html', 
-                              predictions=predictions, 
-                              plot_url=plot_url,
-                              now=datetime.now())
+        return render_template('history.html', predictions=predictions, plot_url=plot_url, now=datetime.now())
+    
+    @app.route('/about-model')
+    def about_model():
+        logger.info("About Model route accessed")
+        return render_template('about_model.html', now=datetime.now())
+    
+    # Return the app instance for run.py to use
+    return app

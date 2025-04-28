@@ -1,0 +1,9 @@
+2025-04-26 18:46:28,668 - INFO - calibration_model - Starting model training script
+2025-04-26 18:46:28,668 - INFO - calibration_model - Starting Model Training
+2025-04-26 18:46:28,678 - INFO - calibration_model - Loaded data shape: (1469, 40)
+2025-04-26 18:46:33,244 - INFO - calibration_model - Best parameters: {'gbr__learning_rate': 0.01, 'gbr__max_depth': 3, 'gbr__n_estimators': 200, 'selector__estimator__n_estimators': 50}
+2025-04-26 18:46:34,503 - INFO - calibration_model - 5-fold CV RMSE: 0.2752 ± 0.0111
+2025-04-26 18:46:34,514 - INFO - calibration_model - Test RMSE: 0.2540, R²: 0.7348
+2025-04-26 18:46:34,537 - INFO - calibration_model - Saved best model to /home/thecoderbee/Desktop/calibration_curve_testing/calibration_pipeline.joblib
+2025-04-26 18:46:34,537 - INFO - calibration_model - Model Training completed in 5.87s
+2025-04-26 18:46:34,537 - INFO - calibration_model - Model training completed successfully

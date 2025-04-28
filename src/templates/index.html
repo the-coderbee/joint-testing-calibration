@@ -292,20 +292,33 @@
                 
                 <div class="p-4">
                     <div class="divide-y divide-gray-200">
-                        {% for i in range(5) %}
-                        <div class="py-3 px-2 hover:bg-gray-50 rounded transition-colors">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <p class="font-medium text-gray-800">Sensor #123{{ i }}</p>
-                                    <p class="text-xs text-gray-500">{{ now.strftime('%Y-%m-%d %H:%M') }}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="font-bold text-primary-600">0.{{ 85 + i * 3 }}</p>
-                                    <p class="text-xs text-gray-500">Prediction</p>
+                        {% if recent_predictions %}
+                            {% for prediction in recent_predictions %}
+                            <div class="py-3 px-2 hover:bg-gray-50 rounded transition-colors">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <p class="font-medium text-gray-800">
+                                            {% if prediction.sensor_id %}
+                                                Sensor #{{ prediction.sensor_id }}
+                                            {% else %}
+                                                Unknown Sensor
+                                            {% endif %}
+                                        </p>
+                                        <p class="text-xs text-gray-500">{{ prediction.timestamp }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-primary-600">{{ prediction.prediction|round(2) }}</p>
+                                        <p class="text-xs text-gray-500">Prediction</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="py-8 text-center">
+                                <p class="text-gray-500">No predictions available yet.</p>
+                                <p class="text-sm text-gray-400 mt-2">Submit the form to make your first prediction.</p>
+                            </div>
+                        {% endif %}
                     </div>
                     
                     <div class="mt-4 text-center">
@@ -329,19 +342,27 @@
                 <div class="p-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-gray-50 p-3 rounded-lg text-center">
-                            <p class="text-2xl font-bold text-gray-800">24</p>
+                            <p class="text-2xl font-bold text-gray-800">{{ stats.total }}</p>
                             <p class="text-xs text-gray-500">Total Predictions</p>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-lg text-center">
-                            <p class="text-2xl font-bold text-primary-600">0.92</p>
+                            <p class="text-2xl font-bold text-primary-600">{{ "%.2f"|format(stats.average) if stats.average > 0 else "0.00" }}</p>
                             <p class="text-xs text-gray-500">Average Score</p>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-lg text-center">
-                            <p class="text-2xl font-bold text-green-600">98%</p>
+                            {% if stats.total > 0 %}
+                            <p class="text-2xl font-bold text-green-600">100%</p>
+                            {% else %}
+                            <p class="text-2xl font-bold text-gray-400">N/A</p>
+                            {% endif %}
                             <p class="text-xs text-gray-500">Success Rate</p>
                         </div>
                         <div class="bg-gray-50 p-3 rounded-lg text-center">
-                            <p class="text-2xl font-bold text-secondary-600">5</p>
+                            {% if stats.total > 0 %}
+                            <p class="text-2xl font-bold text-secondary-600">{{ stats.batch_count|default(0) }}</p>
+                            {% else %}
+                            <p class="text-2xl font-bold text-gray-400">0</p>
+                            {% endif %}
                             <p class="text-xs text-gray-500">Batch Uploads</p>
                         </div>
                     </div>
